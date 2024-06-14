@@ -9,7 +9,7 @@ export const Results = async () => {
   return (
     <div>
       <h2 className="text-lg font-semibold mb-4">
-        Streams we think you&apos;ll like
+       😂🤣 Streams we think you'll  🤪🤪 like 😎😎
       </h2>
       {data.length === 0 && (
         <div className="text-muted-foreground text-sm">
