@@ -9,7 +9,7 @@ const receiver = new WebhookReceiver(
 );
 
 export async function POST(req: Request) {
-  // try {
+  try {
     const body = await req.text();
     const headerPayload = headers();
     const authorization = headerPayload.get("Authorization");
@@ -47,8 +47,9 @@ export async function POST(req: Request) {
     // Default response for unhandled events
     return new Response("Event not handled", { status: 400 });
 
+  } catch (error) {
+    // Handle the error (logging and returning a 500 response)
+    console.error("Error processing LiveKit webhook:", error); 
+    return new Response(`Error processing request: ${error.message}`, { status: 500 });
   }
-  // catch (error) {
-  //  return new Response(`Error processing request: ${error.message}`, { status: 500 });
-  // }
 }
