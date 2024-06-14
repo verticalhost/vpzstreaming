@@ -14,7 +14,7 @@ export const Logo = () => {
       <div className="bg-white rounded-full p-1">
         <Image
           src="/spooky.svg"
-          alt="Gamehub"
+          alt="VerticalPixelZone"
           height="80"
           width="80"
         />
@@ -24,7 +24,7 @@ export const Logo = () => {
         font.className,
       )}>
         <p className="text-xl font-semibold">
-          Gamehub
+         VerticalPixelZone
         </p>
         <p className="text-sm text-muted-foreground">
           Let&apos;s play
