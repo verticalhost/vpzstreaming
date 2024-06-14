@@ -50,6 +50,6 @@ export async function POST(req: Request) {
   } catch (error) {
     // Handle the error (logging and returning a 500 response)
     console.error("Error processing LiveKit webhook:", error); 
-    return new Response(`Error processing request: ${error.message}`, { status: 500 });
+    return new Response(`Error processing request: ${(error as Error).message}`, { status: 500 });
   }
 }
