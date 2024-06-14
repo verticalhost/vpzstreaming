@@ -46,8 +46,9 @@ export async function POST(req: Request) {
 
     // Default response for unhandled events
     return new Response("Event not handled", { status: 400 });
-    
-  } catch (error) {
-    return new Response(`Error processing request: ${error.message}`, { status: 500 });
+     
   }
+  // catch (error) {
+  //  return new Response(`Error processing request: ${error.message}`, { status: 500 });
+  // }
 }
