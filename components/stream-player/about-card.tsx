@@ -10,7 +10,7 @@ interface AboutCardProps {
   viewerIdentity: string;
   bio: string | null;
   followedByCount: number;
-};
+}
 
 export const AboutCard = ({
   hostName,
@@ -19,7 +19,7 @@ export const AboutCard = ({
   bio,
   followedByCount,
 }: AboutCardProps) => {
-  const hostAsViewer = `host-${hostIdentity}`;
+  const hostAsViewer = `Host-${hostIdentity}`;
   const isHost = viewerIdentity === hostAsViewer;
 
   const followedByLabel = followedByCount === 1 ? "follower" : "followers";
@@ -32,18 +32,13 @@ export const AboutCard = ({
             About {hostName}
             <VerifiedMark />
           </div>
-          {isHost && (
-            <BioModal initialValue={bio} />
-          )}
+          {isHost && <BioModal initialValue={bio} />}
         </div>
         <div className="text-sm text-muted-foreground">
-          <span className="font-semibold text-primary">
-            {followedByCount}
-          </span> {followedByLabel}
+          <span className="font-semibold text-primary">{followedByCount}</span>{" "}
+          {followedByLabel}
         </div>
-        <p className="text-sm">
-          {bio || "This user prefers to keep an air of mystery about them."}
-        </p>
+        <p className="text-sm">{bio || "This user has not set a bio yet."}</p>
       </div>
     </div>
   );

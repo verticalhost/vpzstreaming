@@ -1,24 +1,23 @@
-import { ClerkProvider } from '@clerk/nextjs'
-import { dark } from '@clerk/themes'
-import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
-import { Toaster } from 'sonner';
-import './globals.css'
+import { ClerkProvider } from "@clerk/nextjs";
+import { dark } from "@clerk/themes";
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
+import { Toaster } from "sonner";
+import "./globals.css";
+import { ThemeProvider } from "@/components/theme-provider";
 
-import { ThemeProvider } from '@/components/theme-provider'
-
-const inter = Inter({ subsets: ['latin'] })
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: 'VerticalPixelZone',
-  description: 'Best streaming platform',
-}
+  title: "Twitch",
+  description: "Twitch is the world's leading video platform and community for gamers.",
+};
 
 export default function RootLayout({
   children,
-}: {
-  children: React.ReactNode
-}) {
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   return (
     <ClerkProvider appearance={{ baseTheme: dark }}>
       <html lang="en">
@@ -26,13 +25,13 @@ export default function RootLayout({
           <ThemeProvider
             attribute="class"
             forcedTheme="dark"
-            storageKey="gamehub-theme"
+            storageKey="twitch-theme"
           >
-            <Toaster theme="light" position="bottom-center" />
+            <Toaster theme="light" position="top-right" />
             {children}
           </ThemeProvider>
         </body>
       </html>
     </ClerkProvider>
-  )
+  );
 }

@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { User } from "@prisma/client";
-import { formatDistanceToNow } from "date-fns";
+import { Stream, User } from "@prisma/client";
+import moment from "moment";
 
 import { Thumbnail, ThumbnailSkeleton } from "@/components/thumbnail";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -9,23 +9,21 @@ import { VerifiedMark } from "@/components/verified-mark";
 interface ResultCardProps {
   data: {
     id: string;
-    name: string;
-    thumbnailUrl: string | null;
+    title: string;
+    thumbnail: string | null;
     isLive: boolean;
     updatedAt: Date;
     user: User;
   };
-};
+}
 
-export const ResultCard = ({
-  data,
-}: ResultCardProps) => {
+export const ResultCard = ({ data }: ResultCardProps) => {
   return (
     <Link href={`/${data.user.username}`}>
       <div className="w-full flex gap-x-4">
         <div className="relative h-[9rem] w-[16rem]">
           <Thumbnail
-            src={data.thumbnailUrl}
+            src={data.thumbnail}
             fallback={data.user.imageUrl}
             isLive={data.isLive}
             username={data.user.username}
@@ -38,11 +36,9 @@ export const ResultCard = ({
             </p>
             <VerifiedMark />
           </div>
-          <p className="text-sm text-muted-foreground">{data.name}</p>
+          <p className="text-sm text-muted-foreground">{data.title}</p>
           <p className="text-sm text-muted-foreground">
-            {formatDistanceToNow(new Date(data.updatedAt), {
-              addSuffix: true,
-            })}
+            {moment(data.updatedAt).fromNow()}
           </p>
         </div>
       </div>

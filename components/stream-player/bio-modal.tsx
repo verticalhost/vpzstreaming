@@ -17,11 +17,9 @@ import { Textarea } from "@/components/ui/textarea";
 
 interface BioModalProps {
   initialValue: string | null;
-};
+}
 
-export const BioModal = ({
-  initialValue,
-}: BioModalProps) => {
+export const BioModal = ({ initialValue }: BioModalProps) => {
   const closeRef = useRef<ElementRef<"button">>(null);
 
   const [isPending, startTransition] = useTransition();
@@ -38,7 +36,7 @@ export const BioModal = ({
         })
         .catch(() => toast.error("Something went wrong"));
     });
-  }
+  };
 
   return (
     <Dialog>
@@ -65,11 +63,7 @@ export const BioModal = ({
                 Cancel
               </Button>
             </DialogClose>
-            <Button
-              disabled={isPending}
-              type="submit"
-              variant="primary"
-            >
+            <Button disabled={isPending} type="submit" variant="primary">
               Save
             </Button>
           </div>

@@ -1,6 +1,5 @@
 import { getSelf } from "@/lib/auth-service";
 import { getStreamByUserId } from "@/lib/stream-service";
-
 import { ToggleCard } from "./_components/toggle-card";
 
 const ChatPage = async () => {
@@ -11,32 +10,30 @@ const ChatPage = async () => {
     throw new Error("Stream not found");
   }
 
-  return ( 
+  return (
     <div className="p-6">
       <div className="mb-4">
-        <h1 className="text-2xl font-bold">
-          Chat settings
-        </h1>
+        <h1 className="text-2xl font-semibold">Chat</h1>
       </div>
       <div className="space-y-4">
         <ToggleCard
           field="isChatEnabled"
-          label="Enable chat"
           value={stream.isChatEnabled}
+          lable="Enable Chat"
         />
         <ToggleCard
           field="isChatDelayed"
-          label="Delay chat"
           value={stream.isChatDelayed}
+          lable="Delay Chat"
         />
         <ToggleCard
           field="isChatFollowersOnly"
-          label="Must be following to chat"
           value={stream.isChatFollowersOnly}
+          lable="Followrs Only Chat"
         />
       </div>
     </div>
   );
 };
- 
+
 export default ChatPage;

@@ -6,12 +6,9 @@ import { Hint } from "@/components/hint";
 interface ChatInfoProps {
   isDelayed: boolean;
   isFollowersOnly: boolean;
-};
+}
 
-export const ChatInfo = ({
-  isDelayed,
-  isFollowersOnly
-}: ChatInfoProps) => {
+export const ChatInfo = ({ isDelayed, isFollowersOnly }: ChatInfoProps) => {
   const hint = useMemo(() => {
     if (isFollowersOnly && !isDelayed) {
       return "Only followers can chat";
@@ -22,12 +19,11 @@ export const ChatInfo = ({
     }
 
     if (isDelayed && isFollowersOnly) {
-      return "Only followers can chat. Messages are delayed by 3 seconds"
+      return "Only followers can chat. Messages are delayed by 3 seconds";
     }
 
     return "";
   }, [isDelayed, isFollowersOnly]);
-
 
   const label = useMemo(() => {
     if (isFollowersOnly && !isDelayed) {
@@ -39,7 +35,7 @@ export const ChatInfo = ({
     }
 
     if (isDelayed && isFollowersOnly) {
-      return "Followers only and slow mode"
+      return "Followers only and slow mode";
     }
 
     return "";
@@ -54,9 +50,7 @@ export const ChatInfo = ({
       <Hint label={hint}>
         <Info className="h-4 w-4" />
       </Hint>
-      <p className="text-xs font-semibold">
-        {label}
-      </p>
+      <p className="text-xs font-semibold">{label}</p>
     </div>
   );
 };

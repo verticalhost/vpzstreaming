@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { ArrowUpDown } from "lucide-react";
 import { ColumnDef } from "@tanstack/react-table";
@@ -14,7 +14,7 @@ export type BlockedUser = {
   imageUrl: string;
   username: string;
   createdAt: string;
-}
+};
 
 export const columns: ColumnDef<BlockedUser>[] = [
   {
@@ -30,13 +30,13 @@ export const columns: ColumnDef<BlockedUser>[] = [
     ),
     cell: ({ row }) => (
       <div className="flex items-center gap-x-4">
-        <UserAvatar 
-          username={row.original.username} 
+        <UserAvatar
+          username={row.original.username}
           imageUrl={row.original.imageUrl}
         />
         <span>{row.original.username}</span>
       </div>
-    )
+    ),
   },
   {
     accessorKey: "createdAt",
@@ -52,6 +52,6 @@ export const columns: ColumnDef<BlockedUser>[] = [
   },
   {
     id: "actions",
-    cell: ({ row }) => <UnblockButton userId={row.original.userId} />
+    cell: ({ row }) => <UnblockButton userId={row.original.userId} />,
   },
-]
+];

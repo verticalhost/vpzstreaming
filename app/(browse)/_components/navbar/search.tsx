@@ -17,10 +17,13 @@ export const Search = () => {
 
     if (!value) return;
 
-    const url = qs.stringifyUrl({
-      url: "/search",
-      query: { term: value },
-    }, { skipEmptyString: true });
+    const url = qs.stringifyUrl(
+      {
+        url: "/search",
+        query: { term: value },
+      },
+      { skipEmptyString: true }
+    );
 
     router.push(url);
   };
@@ -46,7 +49,7 @@ export const Search = () => {
           onClick={onClear}
         />
       )}
-      <Button 
+      <Button
         type="submit"
         size="sm"
         variant="secondary"
