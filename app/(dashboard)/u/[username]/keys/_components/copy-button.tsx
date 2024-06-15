@@ -7,9 +7,11 @@ import { Button } from "@/components/ui/button";
 
 interface CopyButtonProps {
   value?: string;
-}
+};
 
-export const CopyButton = ({ value }: CopyButtonProps) => {
+export const CopyButton = ({
+  value,
+}: CopyButtonProps) => {
   const [isCopied, setIsCopied] = useState(false);
 
   const onCopy = () => {

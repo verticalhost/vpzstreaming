@@ -1,4 +1,4 @@
-import { db } from "@/lib/db";
+import { db } from "@/lib/db"
 
 export const getUserByUsername = async (username: string) => {
   const user = await db.user.findUnique({
@@ -18,8 +18,8 @@ export const getUserByUsername = async (username: string) => {
           isChatDelayed: true,
           isChatEnabled: true,
           isChatFollowersOnly: true,
-          thumbnail: true,
-          title: true,
+          thumbnailUrl: true,
+          name: true,
         },
       },
       _count: {

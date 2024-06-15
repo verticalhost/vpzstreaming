@@ -10,35 +10,33 @@ import { Skeleton } from "@/components/ui/skeleton";
 type FieldTypes = "isChatEnabled" | "isChatDelayed" | "isChatFollowersOnly";
 
 interface ToggleCardProps {
-  field: FieldTypes;
+  label: string;
   value: boolean;
-  lable: string;
-}
+  field: FieldTypes;
+};
 
 export const ToggleCard = ({
-  lable,
-  field,
+  label,
   value = false,
+  field,
 }: ToggleCardProps) => {
   const [isPending, startTransition] = useTransition();
-  const onChange = async () => {
+
+  const onChange = () => {
     startTransition(() => {
-      updateStream({
-        [field]: !value,
-      })
-        .then(() => {
-          toast.success(`Chat Settings Updated!`);
-        })
-        .catch(() => {
-          toast.error("Failed to update chat");
-        });
+       updateStream({ [field]: !value })
+        .then(() => toast.success("Chat settings updated!"))
+        .catch(() => toast.error("Something went wrong"));
     });
   };
+
   return (
     <div className="rounded-xl bg-muted p-6">
-      <div className="flex justify-between items-center">
-        <p className="shrink-0 font-semibold">{lable}</p>
-        <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <p className="font-semibold shrink-0">
+          {label}
+        </p>
+        <div className="space-y-2">
           <Switch
             disabled={isPending}
             onCheckedChange={onChange}
@@ -53,5 +51,7 @@ export const ToggleCard = ({
 };
 
 export const ToggleCardSkeleton = () => {
-  return <Skeleton className="rounded-xl p-10 w-full" />;
+  return (
+    <Skeleton className="rounded-xl p-10 w-full" />
+  );
 };

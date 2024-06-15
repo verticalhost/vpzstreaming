@@ -20,8 +20,8 @@ export const updateStream = async (values: Partial<Stream>) => {
     }
 
     const validData = {
-      thumbnail: values.thumbnail,
-      title: values.title,
+      thumbnailUrl: values.thumbnailUrl,
+      name: values.name,
       isChatEnabled: values.isChatEnabled,
       isChatFollowersOnly: values.isChatFollowersOnly,
       isChatDelayed: values.isChatDelayed,
@@ -43,5 +43,5 @@ export const updateStream = async (values: Partial<Stream>) => {
     return stream;
   } catch {
     throw new Error("Internal Error");
-  }
+  };
 };

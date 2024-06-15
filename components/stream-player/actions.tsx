@@ -15,7 +15,7 @@ interface ActionsProps {
   hostIdentity: string;
   isFollowing: boolean;
   isHost: boolean;
-}
+};
 
 export const Actions = ({
   hostIdentity,
@@ -29,22 +29,18 @@ export const Actions = ({
   const handleFollow = () => {
     startTransition(() => {
       onFollow(hostIdentity)
-        .then((data) =>
-          toast.success(`You are now following ${data.following.username}`)
-        )
-        .catch(() => toast.error("Something went wrong"));
+        .then((data) => toast.success(`You are now following ${data.following.username}`))
+        .catch(() => toast.error("Something went wrong"))
     });
-  };
+  }
 
   const handleUnfollow = () => {
     startTransition(() => {
       onUnfollow(hostIdentity)
-        .then((data) =>
-          toast.success(`You have unfollowed ${data.following.username}`)
-        )
-        .catch(() => toast.error("Something went wrong"));
+        .then((data) => toast.success(`You have unfollowed ${data.following.username}`))
+        .catch(() => toast.error("Something went wrong"))
     });
-  };
+  }
 
   const toggleFollow = () => {
     if (!userId) {
@@ -58,7 +54,7 @@ export const Actions = ({
     } else {
       handleFollow();
     }
-  };
+  }
 
   return (
     <Button
@@ -68,14 +64,22 @@ export const Actions = ({
       size="sm"
       className="w-full lg:w-auto"
     >
-      <Heart
-        className={cn("h-4 w-4 mr-2", isFollowing ? "fill-white" : "fill-none")}
-      />
-      {isFollowing ? "Unfollow" : "Follow"}
+      <Heart className={cn(
+        "h-4 w-4 mr-2",
+        isFollowing
+          ? "fill-white"
+          : "fill-none"
+      )} />
+      {isFollowing
+        ? "Unfollow"
+        : "Follow"
+      }
     </Button>
-  );
+  )
 };
 
 export const ActionsSkeleton = () => {
-  return <Skeleton className="h-10 w-full lg:w-24" />;
+  return (
+    <Skeleton className="h-10 w-full lg:w-24" />
+  );
 };

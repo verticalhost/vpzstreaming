@@ -1,6 +1,7 @@
 import { toast } from "sonner";
 import { useEffect, useState } from "react";
 import { JwtPayload, jwtDecode } from "jwt-decode";
+
 import { createViewerToken } from "@/actions/token";
 
 export const useViewerToken = (hostIdentity: string) => {
@@ -11,28 +12,32 @@ export const useViewerToken = (hostIdentity: string) => {
   useEffect(() => {
     const createToken = async () => {
       try {
-        const viewrToken = await createViewerToken(hostIdentity);
-        setToken(viewrToken);
+        const viewerToken = await createViewerToken(hostIdentity);
+        setToken(viewerToken);
 
-        const decodedToken = jwtDecode(viewrToken) as JwtPayload & {
-          name?: string;
-        };
+        const decodedToken = jwtDecode(viewerToken) as JwtPayload & { name?: string }
         const name = decodedToken?.name;
-        const identity = decodedToken?.jti;
+        const identity = decodedToken.jti;
 
         if (identity) {
           setIdentity(identity);
         }
+
         if (name) {
           setName(name);
         }
-      } catch (e) {
-        toast.error("Failed to create token");
+
+      } catch {
+        toast.error("Something went wrong");
       }
-    };
+    }
 
     createToken();
   }, [hostIdentity]);
 
-  return { token, name, identity };
+  return {
+    token,
+    name,
+    identity,
+  };
 };

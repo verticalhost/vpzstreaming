@@ -1,6 +1,52 @@
 import { db } from "@/lib/db";
 import { getSelf } from "@/lib/auth-service";
 
+export const getFollowedUsers = async () => {
+  try {
+    const self = await getSelf();
+
+    const followedUsers = db.follow.findMany({
+      where: {
+        followerId: self.id,
+        following: {
+          blocking: {
+            none: {
+              blockedId: self.id,
+            },
+          },
+        },
+      },
+      include: {
+        following: {
+          include: {
+            stream: {
+              select: {
+                isLive: true,
+              },
+            },
+          },
+        },
+      },
+      orderBy: [
+        {
+          following: {
+            stream: {
+              isLive: "desc",
+            },
+          },
+        },
+        {
+          createdAt: "desc"
+        },
+      ]
+    });
+
+    return followedUsers;
+  } catch {
+    return [];
+  }
+};
+
 export const isFollowingUser = async (id: string) => {
   try {
     const self = await getSelf();
@@ -108,37 +154,4 @@ export const unfollowUser = async (id: string) => {
   });
 
   return follow;
-};
-export const getFollowedUsers = async () => {
-  try {
-    const self = await getSelf();
-
-    const followedUsers = await db.follow.findMany({
-      where: {
-        followerId: self.id,
-        following: {
-          blocking: {
-            none: {
-              blockerId: self.id,
-            },
-          },
-        },
-      },
-      include: {
-        following: {
-          include: {
-            stream: {
-              select: {
-                isLive: true,
-              },
-            },
-          },
-        },
-      },
-    });
-
-    return followedUsers;
-  } catch {
-    return [];
-  }
 };

@@ -15,7 +15,7 @@ export const updateUser = async (values: Partial<User>) => {
 
   const user = await db.user.update({
     where: { id: self.id },
-    data: { ...validData },
+    data: { ...validData }
   });
 
   revalidatePath(`/${self.username}`);

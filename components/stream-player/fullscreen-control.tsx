@@ -7,7 +7,7 @@ import { Hint } from "@/components/hint";
 interface FullscreenControlProps {
   isFullscreen: boolean;
   onToggle: () => void;
-}
+};
 
 export const FullscreenControl = ({
   isFullscreen,
@@ -15,7 +15,7 @@ export const FullscreenControl = ({
 }: FullscreenControlProps) => {
   const Icon = isFullscreen ? Minimize : Maximize;
 
-  const label = isFullscreen ? "Exit fullscreen" : "Enter fullscreen";
+  const label = isFullscreen ? "Exit fullscreen" : "Enter fullscreen"
 
   return (
     <div className="flex items-center justify-center gap-4">

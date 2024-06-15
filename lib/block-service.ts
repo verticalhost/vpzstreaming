@@ -6,16 +6,14 @@ export const isBlockedByUser = async (id: string) => {
     const self = await getSelf();
 
     const otherUser = await db.user.findUnique({
-      where: {
-        id,
-      },
+      where: { id }
     });
 
     if (!otherUser) {
       throw new Error("User not found");
     }
 
-    if (self.id === otherUser.id) {
+    if (otherUser.id === self.id) {
       return false;
     }
 
@@ -38,13 +36,11 @@ export const blockUser = async (id: string) => {
   const self = await getSelf();
 
   if (self.id === id) {
-    throw new Error("You cannot block yourself");
+    throw new Error("Cannot block yourself");
   }
 
   const otherUser = await db.user.findUnique({
-    where: {
-      id,
-    },
+    where: { id }
   });
 
   if (!otherUser) {
@@ -80,10 +76,12 @@ export const blockUser = async (id: string) => {
 export const unblockUser = async (id: string) => {
   const self = await getSelf();
 
+  if (self.id === id) {
+    throw new Error("Cannot unblock yourself");
+  }
+
   const otherUser = await db.user.findUnique({
-    where: {
-      id,
-    },
+    where: { id },
   });
 
   if (!otherUser) {

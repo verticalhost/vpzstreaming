@@ -18,12 +18,16 @@ export const getSearch = async (term?: string) => {
       where: {
         user: {
           NOT: {
-            id: userId,
+            blocking: {
+              some: {
+                blockedId: userId,
+              },
+            },
           },
         },
         OR: [
           {
-            title: {
+            name: {
               contains: term,
             },
           },
@@ -32,16 +36,16 @@ export const getSearch = async (term?: string) => {
               username: {
                 contains: term,
               },
-            },
+            }
           },
         ],
       },
       select: {
         user: true,
         id: true,
-        title: true,
+        name: true,
         isLive: true,
-        thumbnail: true,
+        thumbnailUrl: true,
         updatedAt: true,
       },
       orderBy: [
@@ -58,7 +62,7 @@ export const getSearch = async (term?: string) => {
       where: {
         OR: [
           {
-            title: {
+            name: {
               contains: term,
             },
           },
@@ -67,16 +71,16 @@ export const getSearch = async (term?: string) => {
               username: {
                 contains: term,
               },
-            },
+            }
           },
         ],
       },
       select: {
         user: true,
         id: true,
-        title: true,
+        name: true,
         isLive: true,
-        thumbnail: true,
+        thumbnailUrl: true,
         updatedAt: true,
       },
       orderBy: [
@@ -88,6 +92,7 @@ export const getSearch = async (term?: string) => {
         },
       ],
     });
-  }
+  };
+
   return streams;
 };

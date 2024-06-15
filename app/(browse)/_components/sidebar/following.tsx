@@ -7,14 +7,16 @@ import { useSidebar } from "@/store/use-sidebar";
 import { UserItem, UserItemSkeleton } from "./user-item";
 
 interface FollowingProps {
-  data: (Follow & {
+  data: (Follow & { 
     following: User & {
       stream: { isLive: boolean } | null;
-    };
+    },
   })[];
 }
 
-export const Following = ({ data }: FollowingProps) => {
+export const Following = ({
+  data,
+}: FollowingProps) => {
   const { collapsed } = useSidebar((state) => state);
 
   if (!data.length) {
@@ -25,7 +27,9 @@ export const Following = ({ data }: FollowingProps) => {
     <div>
       {!collapsed && (
         <div className="pl-6 mb-4">
-          <p className="text-sm text-muted-foreground">Following</p>
+          <p className="text-sm text-muted-foreground">
+            Following
+          </p>
         </div>
       )}
       <ul className="space-y-2 px-2">

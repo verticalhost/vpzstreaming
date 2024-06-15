@@ -2,7 +2,12 @@
 
 import { useUser } from "@clerk/nextjs";
 import { usePathname } from "next/navigation";
-import { Fullscreen, KeyRound, MessageSquare, Users } from "lucide-react";
+import { 
+  Fullscreen,
+  KeyRound,
+  MessageSquare,
+  Users,
+} from "lucide-react";
 
 import { NavItem, NavItemSkeleton } from "./nav-item";
 
@@ -45,7 +50,7 @@ export const Navigation = () => {
 
   return (
     <ul className="space-y-2 px-2 pt-4 lg:pt-0">
-      {routes.map((route) => (
+     {routes.map((route) => (
         <NavItem
           key={route.href}
           label={route.label}
@@ -53,7 +58,7 @@ export const Navigation = () => {
           href={route.href}
           isActive={pathname === route.href}
         />
-      ))}
+     ))}
     </ul>
   );
 };

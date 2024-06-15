@@ -11,9 +11,11 @@ import { RecommendedSkeleton } from "./recommended";
 
 interface WrapperProps {
   children: React.ReactNode;
-}
+};
 
-export const Wrapper = ({ children }: WrapperProps) => {
+export const Wrapper = ({
+  children,
+}: WrapperProps) => {
   const isClient = useIsClient();
   const { collapsed } = useSidebar((state) => state);
 

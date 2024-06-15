@@ -14,9 +14,13 @@ interface UserItemProps {
   username: string;
   imageUrl: string;
   isLive?: boolean;
-}
+};
 
-export const UserItem = ({ username, imageUrl, isLive }: UserItemProps) => {
+export const UserItem = ({
+  username,
+  imageUrl,
+  isLive,
+}: UserItemProps) => {
   const pathname = usePathname();
 
   const { collapsed } = useSidebar((state) => state);
@@ -31,19 +35,27 @@ export const UserItem = ({ username, imageUrl, isLive }: UserItemProps) => {
       className={cn(
         "w-full h-12",
         collapsed ? "justify-center" : "justfy-start",
-        isActive && "bg-accent"
+        isActive && "bg-accent",
       )}
     >
       <Link href={href}>
-        <div
-          className={cn(
-            "flex items-center w-full gap-x-4",
-            collapsed && "justify-center"
+        <div className={cn(
+          "flex items-center w-full gap-x-4",
+          collapsed && "justify-center",
+        )}>
+          <UserAvatar
+            imageUrl={imageUrl}
+            username={username}
+            isLive={isLive}
+          />
+          {!collapsed && (
+            <p className="truncate">
+              {username}
+            </p>
           )}
-        >
-          <UserAvatar imageUrl={imageUrl} username={username} isLive={isLive} />
-          {!collapsed && <p className="truncate">{username}</p>}
-          {!collapsed && isLive && <LiveBadge className="ml-auto" />}
+          {!collapsed && isLive && (
+            <LiveBadge className="ml-auto" />
+          )}
         </div>
       </Link>
     </Button>

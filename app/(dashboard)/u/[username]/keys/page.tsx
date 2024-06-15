@@ -13,10 +13,12 @@ const KeysPage = async () => {
     throw new Error("Stream not found");
   }
 
-  return (
+  return ( 
     <div className="p-6">
       <div className="flex items-center justify-between mb-4">
-        <h1 className="text-2xl font-bold">Keys & URLs</h1>
+        <h1 className="text-2xl font-bold">
+          Keys & URLs
+        </h1>
         <ConnectModal />
       </div>
       <div className="space-y-4">
@@ -26,5 +28,5 @@ const KeysPage = async () => {
     </div>
   );
 };
-
+ 
 export default KeysPage;

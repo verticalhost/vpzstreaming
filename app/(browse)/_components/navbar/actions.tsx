@@ -1,6 +1,10 @@
 import Link from "next/link";
 import { Clapperboard } from "lucide-react";
-import { SignInButton, UserButton, currentUser } from "@clerk/nextjs";
+import { 
+  SignInButton, 
+  UserButton, 
+  currentUser
+} from "@clerk/nextjs";
 
 import { Button } from "@/components/ui/button";
 
@@ -26,10 +30,14 @@ export const Actions = async () => {
           >
             <Link href={`/u/${user.username}`}>
               <Clapperboard className="h-5 w-5 lg:mr-2" />
-              <span className="hidden lg:block">Dashboard</span>
+              <span className="hidden lg:block">
+                Dashboard
+              </span>
             </Link>
           </Button>
-          <UserButton afterSignOutUrl="/" />
+          <UserButton
+            afterSignOutUrl="/"
+          />
         </div>
       )}
     </div>
