@@ -43,37 +43,33 @@ const use7tvEmotes = () => {
           throw new Error("No emote set found for the user.");
         }
 
-        // Fetch each emote by its ID using the Get Emote endpoint
-        const fetchedEmotes = await Promise.all(
-          emoteSetData.emotes.map(async (emote: any) => {
-            const emoteResponse = await fetch(`https://7tv.io/v3/emotes/${emote.id}`);
-            if (!emoteResponse.ok) {
-              return null;
-            }
-            const emoteData = await emoteResponse.json();
-            return emoteData;
-          })
-        );
+           // Fetch the user's emote set using the emote set ID
+        const emoteSetResponse = await fetch(`https://7tv.io/v3/emote_sets/${emoteSetId}`);
+        if (!emoteSetResponse.ok) {
+          const errorText = await emoteSetResponse.text();
+          throw new Error(`Failed to fetch emote set. Status: ${emoteSetResponse.status}, Message: ${errorText}`);
+        }
 
-        // Create a dictionary of emote URLs
-        const emotes = fetchedEmotes.reduce((acc: any, emote: any) => {
-          if (emote && emote.host && emote.host.url && emote.host.files && emote.host.files.length > 0) {
-            const emoteFile = emote.host.files.find((file: any) => file.format === "WEBP" || file.format === "GIF") || emote.host.files[0];
-            if (emoteFile && emote.host.url) {
-              acc[emote.name] = `https:${emote.host.url}/${emoteFile.name}`;
-            }
-          }
+        const emoteSetData = await emoteSetResponse.json();
+
+        if (!emoteSetData || !emoteSetData.emotes || emoteSetData.emotes.length === 0) {
+          throw new Error(`No emotes found for the specified emote set ID: ${emoteSetId}`);
+        }
+
+        // Map the emotes to a key-value pair object
+        const emotes = emoteSetData.emotes.reduce((acc, emote) => {
+          acc[emote.name] = emote.urls[1];
           return acc;
         }, {});
 
         setEmotes(emotes);
-      } catch (error: any) {
-        setError(`Error fetching 7tv emotes: ${error.message}`);
+      } catch (error) {
+        setError(error.message);
       }
     };
 
     fetchEmotes();
-  }, [userID]);
+  }, []);
 
   return { emotes, error };
 };
