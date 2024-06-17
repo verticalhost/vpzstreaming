@@ -20,6 +20,7 @@ export const LiveVideo = ({
 
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [volume, setVolume] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(false);
 
   const onVolumeChange = (value: number) => {
     setVolume(+value);
@@ -39,7 +40,18 @@ export const LiveVideo = ({
       videoRef.current.volume = isMuted ? 0.5 : 0;
     }
   };
-  
+
+  const togglePlayPause = () => {
+    if (videoRef?.current) {
+      if (isPlaying) {
+        videoRef.current.pause();
+      } else {
+        videoRef.current.play();
+      }
+      setIsPlaying(!isPlaying);
+    }
+  };
+
   useEffect(() => {
     onVolumeChange(0);
   }, []);
@@ -75,6 +87,9 @@ export const LiveVideo = ({
       <video ref={videoRef} width="100%" />
       <div className="absolute top-0 h-full w-full opacity-0 hover:opacity-100 hover:transition-all">
         <div className="absolute bottom-0 flex h-14 w-full items-center justify-between bg-gradient-to-r from-neutral-900 px-4">
+          <button onClick={togglePlayPause} className="play-pause-button">
+            {isPlaying ? 'Pause' : 'Play'}
+          </button>
           <VolumeControl
             onChange={onVolumeChange}
             value={volume}
