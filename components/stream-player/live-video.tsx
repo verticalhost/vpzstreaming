@@ -20,7 +20,6 @@ export const LiveVideo = ({
 
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [volume, setVolume] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(false);
 
   const onVolumeChange = (value: number) => {
     setVolume(+value);
@@ -40,41 +39,16 @@ export const LiveVideo = ({
       videoRef.current.volume = isMuted ? 0.5 : 0;
     }
   };
-
-  const togglePlayPause = () => {
-    if (videoRef?.current) {
-      if (videoRef.current.paused) {
-        videoRef.current.play().then(() => setIsPlaying(true)).catch(e => console.error(e));
-      } else {
-        videoRef.current.pause();
-        setIsPlaying(false);
-      }
-    }
-  };
-
+  
   useEffect(() => {
     onVolumeChange(0);
-    if (videoRef.current) {
-      const handlePlay = () => setIsPlaying(true);
-      const handlePause = () => setIsPlaying(false);
-      
-      videoRef.current.addEventListener("play", handlePlay);
-      videoRef.current.addEventListener("pause", handlePause);
-
-      return () => {
-        if (videoRef.current) {
-          videoRef.current.removeEventListener("play", handlePlay);
-          videoRef.current.removeEventListener("pause", handlePause);
-        }
-      };
-    }
   }, []);
 
   const toggleFullscreen = () => {
     if (isFullscreen) {
-      document.exitFullscreen();
+      document.exitFullscreen()
     } else if (wrapperRef?.current) {
-      wrapperRef.current.requestFullscreen();
+      wrapperRef.current.requestFullscreen()
     }
   };
 
@@ -101,9 +75,6 @@ export const LiveVideo = ({
       <video ref={videoRef} width="100%" />
       <div className="absolute top-0 h-full w-full opacity-0 hover:opacity-100 hover:transition-all">
         <div className="absolute bottom-0 flex h-14 w-full items-center justify-between bg-gradient-to-r from-neutral-900 px-4">
-          <button onClick={togglePlayPause} className="play-pause-button">
-            {isPlaying ? 'Pause' : 'Play'}
-          </button>
           <VolumeControl
             onChange={onVolumeChange}
             value={volume}
