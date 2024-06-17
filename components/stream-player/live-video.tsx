@@ -43,24 +43,38 @@ export const LiveVideo = ({
 
   const togglePlayPause = () => {
     if (videoRef?.current) {
-      if (isPlaying) {
-        videoRef.current.pause();
+      if (videoRef.current.paused) {
+        videoRef.current.play().then(() => setIsPlaying(true)).catch(e => console.error(e));
       } else {
-        videoRef.current.play();
+        videoRef.current.pause();
+        setIsPlaying(false);
       }
-      setIsPlaying(!isPlaying);
     }
   };
 
   useEffect(() => {
     onVolumeChange(0);
+    if (videoRef.current) {
+      const handlePlay = () => setIsPlaying(true);
+      const handlePause = () => setIsPlaying(false);
+      
+      videoRef.current.addEventListener("play", handlePlay);
+      videoRef.current.addEventListener("pause", handlePause);
+
+      return () => {
+        if (videoRef.current) {
+          videoRef.current.removeEventListener("play", handlePlay);
+          videoRef.current.removeEventListener("pause", handlePause);
+        }
+      };
+    }
   }, []);
 
   const toggleFullscreen = () => {
     if (isFullscreen) {
-      document.exitFullscreen()
+      document.exitFullscreen();
     } else if (wrapperRef?.current) {
-      wrapperRef.current.requestFullscreen()
+      wrapperRef.current.requestFullscreen();
     }
   };
 
