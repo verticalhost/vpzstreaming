@@ -9,6 +9,10 @@ interface ChatMessageProps {
   data: ReceivedChatMessage;
 }
 
+/**
+ * Custom hook to fetch and manage 7TV emotes for a specific user.
+ * @returns An object containing the fetched emotes and any error that occurred during the fetch.
+ */
 const use7tvEmotes = () => {
   const userID = "666b712aa4cae22f82d9e135"; // Fixed user ID
   const [emotes, setEmotes] = useState<{ [key: string]: string }>({});
