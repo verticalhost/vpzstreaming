@@ -9,6 +9,10 @@ interface ChatMessageProps {
   data: ReceivedChatMessage;
 }
 
+interface ChatMessagesProps {
+  messages: ReceivedChatMessage[];
+}
+
 /**
  * Custom hook to fetch and manage 7TV emotes for a specific user.
  * @returns An object containing the fetched emotes and any error that occurred during the fetch.
@@ -21,7 +25,6 @@ const use7tvEmotes = () => {
   useEffect(() => {
     const fetchEmotes = async () => {
       try {
-        // Fetch the user directly using the hardcoded user ID
         const userResponse = await fetch(`https://7tv.io/v3/users/${userID}`);
         if (!userResponse.ok) {
           const errorText = await userResponse.text();
@@ -35,7 +38,6 @@ const use7tvEmotes = () => {
         }
         const emoteSetId = userData.emote_sets[0].id;
 
-        // Fetch the user's emote set using the emote set ID
         const emoteSetResponse = await fetch(`https://7tv.io/v3/emote-sets/${emoteSetId}`);
         if (!emoteSetResponse.ok) {
           const errorText = await emoteSetResponse.text();
@@ -47,7 +49,6 @@ const use7tvEmotes = () => {
           throw new Error("No emote set found for the user.");
         }
 
-        // Fetch each emote by its ID using the Get Emote endpoint
         const fetchedEmotes = await Promise.all(
           emoteSetData.emotes.map(async (emote: any) => {
             const emoteResponse = await fetch(`https://7tv.io/v3/emotes/${emote.id}`);
@@ -59,7 +60,6 @@ const use7tvEmotes = () => {
           })
         );
 
-        // Create a dictionary of emote URLs
         const emotes = fetchedEmotes.reduce((acc: any, emote: any) => {
           if (emote && emote.host && emote.host.url && emote.host.files && emote.host.files.length > 0) {
             const emoteFile = emote.host.files.find((file: any) => file.format === "WEBP" || file.format === "GIF") || emote.host.files[0];
@@ -116,6 +116,18 @@ export const ChatMessage = ({ data }: ChatMessageProps) => {
           {parseEmotes(data.message, emotes)}
         </p>
       </div>
+    </div>
+  );
+};
+
+export const ChatMessages = ({ messages }: ChatMessagesProps) => {
+  const sortedMessages = messages.slice().sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
+
+  return (
+    <div>
+      {sortedMessages.map((message, index) => (
+        <ChatMessage key={index} data={message} />
+      ))}
     </div>
   );
 };
