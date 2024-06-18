@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Image from "next/image"; // Import Image from next/image
 import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
@@ -18,73 +18,63 @@ interface ChatFormProps {
   isDelayed: boolean;
 }
 
-const use7tvEmotes = () => {
+const use7tvEmotes = async (setEmotes: Function, setError: Function) => {
   const userID = "666b712aa4cae22f82d9e135"; // Fixed user ID
-  const [emotes, setEmotes] = useState<{ [key: string]: string }>({});
-  const [error, setError] = useState<string>("");
 
-  useEffect(() => {
-    const fetchEmotes = async () => {
-      try {
-        // Fetch the user directly using the hardcoded user ID
-        const userResponse = await fetch(`https://7tv.io/v3/users/${userID}`);
-        if (!userResponse.ok) {
-          const errorText = await userResponse.text();
-          throw new Error(`Failed to fetch user. Status: ${userResponse.status}, Message: ${errorText}`);
+  try {
+    // Fetch the user directly using the hardcoded user ID
+    const userResponse = await fetch(`https://7tv.io/v3/users/${userID}`);
+    if (!userResponse.ok) {
+      const errorText = await userResponse.text();
+      throw new Error(`Failed to fetch user. Status: ${userResponse.status}, Message: ${errorText}`);
+    }
+
+    const userData = await userResponse.json();
+
+    if (!userData || !userData.emote_sets || userData.emote_sets.length === 0) {
+      throw new Error(`No emote set found for the specified user ID: ${userID}`);
+    }
+    const emoteSetId = userData.emote_sets[0].id;
+
+    // Fetch the user's emote set using the emote set ID
+    const emoteSetResponse = await fetch(`https://7tv.io/v3/emote-sets/${emoteSetId}`);
+    if (!emoteSetResponse.ok) {
+      const errorText = await emoteSetResponse.text();
+      throw new Error(`Failed to fetch emote set. Status: ${emoteSetResponse.status}, Message: ${errorText}`);
+    }
+    const emoteSetData = await emoteSetResponse.json();
+
+    if (!emoteSetData.emotes) {
+      throw new Error("No emote set found for the user.");
+    }
+
+    // Fetch each emote by its ID using the Get Emote endpoint
+    const fetchedEmotes = await Promise.all(
+      emoteSetData.emotes.map(async (emote: any) => {
+        const emoteResponse = await fetch(`https://7tv.io/v3/emotes/${emote.id}`);
+        if (!emoteResponse.ok) {
+          return null;
         }
+        const emoteData = await emoteResponse.json();
+        return emoteData;
+      })
+    );
 
-        const userData = await userResponse.json();
-
-        if (!userData || !userData.emote_sets || userData.emote_sets.length === 0) {
-          throw new Error(`No emote set found for the specified user ID: ${userID}`);
+    // Create a dictionary of emote URLs
+    const emotes = fetchedEmotes.reduce((acc: any, emote: any) => {
+      if (emote && emote.host && emote.host.url && emote.host.files && emote.host.files.length > 0) {
+        const emoteFile = emote.host.files.find((file: any) => file.format === "WEBP" || file.format === "GIF") || emote.host.files[0];
+        if (emoteFile && emote.host.url) {
+          acc[emote.name] = `https:${emote.host.url}/${emoteFile.name}`;
         }
-        const emoteSetId = userData.emote_sets[0].id;
-
-        // Fetch the user's emote set using the emote set ID
-        const emoteSetResponse = await fetch(`https://7tv.io/v3/emote-sets/${emoteSetId}`);
-        if (!emoteSetResponse.ok) {
-          const errorText = await emoteSetResponse.text();
-          throw new Error(`Failed to fetch emote set. Status: ${emoteSetResponse.status}, Message: ${errorText}`);
-        }
-        const emoteSetData = await emoteSetResponse.json();
-
-        if (!emoteSetData.emotes) {
-          throw new Error("No emote set found for the user.");
-        }
-
-        // Fetch each emote by its ID using the Get Emote endpoint
-        const fetchedEmotes = await Promise.all(
-          emoteSetData.emotes.map(async (emote: any) => {
-            const emoteResponse = await fetch(`https://7tv.io/v3/emotes/${emote.id}`);
-            if (!emoteResponse.ok) {
-              return null;
-            }
-            const emoteData = await emoteResponse.json();
-            return emoteData;
-          })
-        );
-
-        // Create a dictionary of emote URLs
-        const emotes = fetchedEmotes.reduce((acc: any, emote: any) => {
-          if (emote && emote.host && emote.host.url && emote.host.files && emote.host.files.length > 0) {
-            const emoteFile = emote.host.files.find((file: any) => file.format === "WEBP" || file.format === "GIF") || emote.host.files[0];
-            if (emoteFile && emote.host.url) {
-              acc[emote.name] = `https:${emote.host.url}/${emoteFile.name}`;
-            }
-          }
-          return acc;
-        }, {});
-
-        setEmotes(emotes);
-      } catch (error: any) {
-        setError(`Error fetching 7tv emotes: ${error.message}`);
       }
-    };
+      return acc;
+    }, {});
 
-    fetchEmotes();
-  }, [userID]);
-
-  return { emotes, error };
+    setEmotes(emotes);
+  } catch (error: any) {
+    setError(`Error fetching 7tv emotes: ${error.message}`);
+  }
 };
 
 export const ChatForm = ({
@@ -98,7 +88,8 @@ export const ChatForm = ({
 }: ChatFormProps) => {
   const [isDelayBlocked, setIsDelayBlocked] = useState(false);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
-  const { emotes, error } = use7tvEmotes();
+  const [emotes, setEmotes] = useState<{ [key: string]: string }>({});
+  const [error, setError] = useState<string>("");
 
   const isFollowersOnlyAndNotFollowing = isFollowersOnly && !isFollowing;
   const isDisabled = isHidden || isDelayBlocked || isFollowersOnlyAndNotFollowing;
@@ -120,7 +111,10 @@ export const ChatForm = ({
     }
   };
 
-  const handlePopupClick = () => {
+  const handlePopupClick = async () => {
+    if (!isPopupOpen) {
+      await use7tvEmotes(setEmotes, setError);
+    }
     setIsPopupOpen(!isPopupOpen);
   };
 
