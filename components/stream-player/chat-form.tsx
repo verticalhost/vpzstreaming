@@ -71,7 +71,7 @@ const fetch7tvEmotes = async () => {
       return acc;
     }, {});
 
-    return { emotes, error: null };
+    return { emotes, error: "" };
   } catch (error: any) {
     return { emotes: {}, error: `Error fetching 7tv emotes: ${error.message}` };
   }
@@ -115,7 +115,7 @@ export const ChatForm = ({
     if (!isPopupOpen) {
       const { emotes, error } = await fetch7tvEmotes();
       setEmotes(emotes);
-      setError(error);
+      setError(error ?? "");  // Ensure error is a string
     }
 
     setIsPopupOpen(!isPopupOpen);
