@@ -156,7 +156,7 @@ export const ChatForm = ({
           Emoji
         </Button>
         {isPopupOpen && (
-          <div className="absolute top-0 left-0 transform -translate-x-full -translate-y-full mt-2 w-64 max-h-60 bg-white border border-gray-200 shadow-lg rounded-md z-50 overflow-auto">
+          <div className="absolute top-0 left-0 transform -translate-x-full -translate-y-full mt-2 w-64 max-h-60 bg-[#1e2128] border border-gray-200 shadow-lg rounded-md z-50 overflow-auto">
             {error ? (
               <div>Error: {error}</div>
             ) : (
