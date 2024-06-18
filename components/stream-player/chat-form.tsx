@@ -19,13 +19,14 @@ interface ChatFormProps {
 }
 
 const use7tvEmotes = () => {
-  const userID = "666b712aa4cae22f82d9e135";
+  const userID = "666b712aa4cae22f82d9e135"; // Fixed user ID
   const [emotes, setEmotes] = useState<{ [key: string]: string }>({});
   const [error, setError] = useState<string>("");
 
   useEffect(() => {
     const fetchEmotes = async () => {
       try {
+        // Fetch the user directly using the hardcoded user ID
         const userResponse = await fetch(`https://7tv.io/v3/users/${userID}`);
         if (!userResponse.ok) {
           const errorText = await userResponse.text();
@@ -33,11 +34,13 @@ const use7tvEmotes = () => {
         }
 
         const userData = await userResponse.json();
+
         if (!userData || !userData.emote_sets || userData.emote_sets.length === 0) {
           throw new Error(`No emote set found for the specified user ID: ${userID}`);
         }
         const emoteSetId = userData.emote_sets[0].id;
 
+        // Fetch the user's emote set using the emote set ID
         const emoteSetResponse = await fetch(`https://7tv.io/v3/emote-sets/${emoteSetId}`);
         if (!emoteSetResponse.ok) {
           const errorText = await emoteSetResponse.text();
@@ -49,6 +52,7 @@ const use7tvEmotes = () => {
           throw new Error("No emote set found for the user.");
         }
 
+        // Fetch each emote by its ID using the Get Emote endpoint
         const fetchedEmotes = await Promise.all(
           emoteSetData.emotes.map(async (emote: any) => {
             const emoteResponse = await fetch(`https://7tv.io/v3/emotes/${emote.id}`);
@@ -60,11 +64,10 @@ const use7tvEmotes = () => {
           })
         );
 
+        // Create a dictionary of emote URLs
         const emotes = fetchedEmotes.reduce((acc: any, emote: any) => {
           if (emote && emote.host && emote.host.url && emote.host.files && emote.host.files.length > 0) {
-            const emoteFile = emote.host.files.find(
-              (file: any) => file.format === "WEBP" || file.format === "GIF"
-            ) || emote.host.files[0];
+            const emoteFile = emote.host.files.find((file: any) => file.format === "WEBP" || file.format === "GIF") || emote.host.files[0];
             if (emoteFile && emote.host.url) {
               acc[emote.name] = `https:${emote.host.url}/${emoteFile.name}`;
             }
@@ -167,7 +170,7 @@ export const ChatForm = ({
                     onClick={() => handleGridButtonClick(key)}
                     className="h-10 w-10"
                   >
-                    <Image src={emotes[key]} alt={key} className="w-full h-full object-contain" width={40} height={40} />
+                    <Image src={emotes[key]} alt={key} width={40} height={40} />
                   </Button>
                 ))}
               </div>

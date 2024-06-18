@@ -3,6 +3,7 @@ const nextConfig = {
   images: {
     domains: [
       "utfs.io",
+      "cdn.7tv.app",
     ],
   },
   webpack: (config) => {
