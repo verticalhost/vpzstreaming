@@ -68,16 +68,20 @@ export const Chat = ({
     );
   }, [messages]);
 
-  const onSubmit = (message: string, timestamp: string) => {
+  const onSubmit = async (message: string) => {
     if (!send) return;
 
-    const newMessage: ReceivedChatMessage = {
-      from: { id: 'viewerID', name: viewerName },
-      message,
-      timestamp,
-    };
+    // Assuming that the backend automatically handles timestamp generation
+    const response = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message, from: { id: 'viewerID', name: viewerName } }),
+    });
 
-    send(newMessage);
+    if (response.ok) {
+      const newMessage: ReceivedChatMessage = await response.json();
+      send(newMessage.message); // send only the message content which is expected by send function
+    }
   };
 
   const onChange = (value: string) => {
