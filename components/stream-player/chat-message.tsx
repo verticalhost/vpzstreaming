@@ -99,7 +99,7 @@ export const ChatMessage = ({ data }: ChatMessageProps) => {
   return (
     <div className="flex flex-col gap-2 p-2 rounded-md hover:bg-white/5">
       <p className="text-sm text-white/40">
-        {format(data.timestamp, "HH:mm")}
+        {format(new Date(data.timestamp), "HH:mm:ss")}
       </p>
       {error && (
         <div>
