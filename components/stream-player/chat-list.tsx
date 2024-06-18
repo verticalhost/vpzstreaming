@@ -1,9 +1,7 @@
-"chat-list.tsx"
-
+// chat-list.tsx
 "use client";
 
 import { Skeleton } from "@/components/ui/skeleton";
-
 import { ChatMessage } from "./chat-message";
 
 interface ChatListProps {
@@ -22,10 +20,12 @@ export const ChatList = ({ messages, isHidden }: ChatListProps) => {
     );
   }
 
-  // Messages are already sorted by timestamp before being passed to this component
+  // Sort messages by timestamp
+  const sortedMessages = messages.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+
   return (
     <div className="flex flex-1 flex-col-reverse overflow-y-auto p-3 h-full">
-      {messages.map((message, index) => (
+      {sortedMessages.map((message, index) => (
         <ChatMessage key={index} data={message} />
       ))}
     </div>

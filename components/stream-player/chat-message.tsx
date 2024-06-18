@@ -114,7 +114,7 @@ export const ChatMessage = ({ data }: ChatMessageProps) => {
           </span>
         </p>
         <p className="text-sm break-all">
-          {parseEmotes(data.message, emotes)}
+          {parseEmotes(data.message.message, emotes)}
         </p>
       </div>
     </div>
