@@ -12,7 +12,7 @@ interface ChatFormProps {
   onSubmit: (message: string, timestamp: string) => void;
   value: string;
   onChange: (value: string) => void;
-  setValue: (value: string) => void; // Add setValue prop
+  setValue: (value: string) => void; // Ensure setValue prop is passed
   isHidden: boolean;
   isFollowersOnly: boolean;
   isFollowing: boolean;
@@ -96,7 +96,7 @@ export const ChatForm = ({
   onSubmit,
   value,
   onChange,
-  setValue, // Use setValue prop
+  setValue, // Ensure setValue prop is here
   isHidden,
   isFollowersOnly,
   isFollowing,

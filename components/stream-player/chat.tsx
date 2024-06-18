@@ -68,20 +68,18 @@ export const Chat = ({
     );
   }, [messages]);
 
-  const onSubmit = async (message: string) => {
+  const onSubmit = (message: string, timestamp: string) => {
     if (!send) return;
 
-    // Assuming that the backend automatically handles timestamp generation
-    const response = await fetch('/api/chat', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message, from: { id: 'viewerID', name: viewerName } }),
-    });
+    const newMessage = {
+      from: { id: 'viewerID', name: viewerName },
+      message,
+      timestamp,
+    };
 
-    if (response.ok) {
-      const newMessage: ReceivedChatMessage = await response.json();
-      send(newMessage.message); // send only the message content which is expected by send function
-    }
+    // Merging message and timestamp into one object, send via the send function.
+    // Assuming send function needs a string and can handle timestamps separately.
+    send(JSON.stringify(newMessage)); // use stringify to pass as a string.
   };
 
   const onChange = (value: string) => {
@@ -98,7 +96,7 @@ export const Chat = ({
             onSubmit={onSubmit}
             value={value}
             onChange={onChange}
-            setValue={setValue} // Pass the setValue function here
+            setValue={setValue} // Pass setValue function here
             isHidden={isHidden}
             isFollowersOnly={isChatFollowersOnly}
             isDelayed={isChatDelayed}
