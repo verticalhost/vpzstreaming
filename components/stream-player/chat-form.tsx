@@ -18,7 +18,7 @@ interface ChatFormProps {
   isDelayed: boolean;
 }
 
-const use7tvEmotes = async (setEmotes: Function, setError: Function) => {
+const fetch7tvEmotes = async (setEmotes: Function, setError: Function) => {
   const userID = "666b712aa4cae22f82d9e135"; // Fixed user ID
 
   try {
@@ -113,7 +113,7 @@ export const ChatForm = ({
 
   const handlePopupClick = async () => {
     if (!isPopupOpen) {
-      await use7tvEmotes(setEmotes, setError);
+      await fetch7tvEmotes(setEmotes, setError);
     }
     setIsPopupOpen(!isPopupOpen);
   };
