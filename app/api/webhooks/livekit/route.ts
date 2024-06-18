@@ -17,41 +17,79 @@ export async function POST(req: Request) {
   const authorization = headerPayload.get("Authorization");
 
   if (!authorization) {
+    console.log("No authorization header");
     return new Response("No authorization header", { status: 400 });
   }
 
-  const event = receiver.receive(body, authorization);
+  try {
+    const event = receiver.receive(body, authorization);
 
-  if (event.event === "ingress_started") {
-    await db.stream.update({
-      where: {
-        ingressId: event.ingressInfo?.ingressId,
-      },
-      data: {
-        isLive: true,
-      },
-    });
+    if (event.event === "ingress_started") {
+      console.log("Stream started event received:", event);
 
-    // Envoyer une notification à Discord via le webhook
-    await fetch(WEBHOOK_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        content: "🚨 New stream is just started on VPZ ! 🚨",
-      }),
-    });
+      // Mettre à jour la table des streams
+      const stream = await db.stream.update({
+        where: {
+          ingressId: event.ingressInfo?.ingressId,
+        },
+        data: {
+          isLive: true,
+        },
+        include: {
+          user: true, // Inclure les informations de l'utilisateur associé
+        },
+      });
+
+      if (!stream.user) {
+        throw new Error("Utilisateur non trouvé pour l'identifiant d'entrée fourni.");
+      }
+
+      const { username, imageUrl } = stream.user;
+      const profileUrl = `https://verticalpixelzone.com/${username}`;
+
+      console.log("Database updated, sending notification to Discord webhook");
+
+      // Envoyer une notification à Discord via le webhook
+      const discordMessage = {
+        content: `🚨 Un nouveau stream vient de commencer ! 🚨\nRegardez [${username}](${profileUrl}) en direct maintenant!`,
+        embeds: [
+          {
+            title: `Nouveau stream par ${username}`,
+            url: profileUrl,
+            thumbnail: {
+              url: imageUrl
+            },
+          },
+        ],
+      };
+
+      await fetch(WEBHOOK_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(discordMessage),
+      });
+
+      console.log("Notification sent to Discord");
+    }
+
+    if (event.event === "ingress_ended") {
+      console.log("Stream ended event received:", event);
+
+      await db.stream.update({
+        where: {
+          ingressId: event.ingressInfo?.ingressId,
+        },
+        data: {
+          isLive: false,
+        },
+      });
+
+      console.log("Database updated for stream end");
+    }
+
+    return new Response("ok", { status: 200 });
+  } catch (error) {
+    console.error("Error processing event:", error);
+    return new Response("Error processing event", { status: 500 });
   }
-
-  if (event.event === "ingress_ended") {
-    await db.stream.update({
-      where: {
-        ingressId: event.ingressInfo?.ingressId,
-      },
-      data: {
-        isLive: false,
-      },
-    });
-  }
-
-  return new Response("ok", { status: 200 });
 }
