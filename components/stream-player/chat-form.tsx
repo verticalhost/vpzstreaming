@@ -18,7 +18,7 @@ interface ChatFormProps {
   isDelayed: boolean;
 }
 
-const fetch7tvEmotes = async (setEmotes: Function, setError: Function) => {
+const fetch7tvEmotes = async () => {
   const userID = "666b712aa4cae22f82d9e135"; // Fixed user ID
 
   try {
@@ -71,9 +71,9 @@ const fetch7tvEmotes = async (setEmotes: Function, setError: Function) => {
       return acc;
     }, {});
 
-    setEmotes(emotes);
+    return { emotes, error: null };
   } catch (error: any) {
-    setError(`Error fetching 7tv emotes: ${error.message}`);
+    return { emotes: {}, error: `Error fetching 7tv emotes: ${error.message}` };
   }
 };
 
@@ -113,8 +113,11 @@ export const ChatForm = ({
 
   const handlePopupClick = async () => {
     if (!isPopupOpen) {
-      await fetch7tvEmotes(setEmotes, setError);
+      const { emotes, error } = await fetch7tvEmotes();
+      setEmotes(emotes);
+      setError(error);
     }
+
     setIsPopupOpen(!isPopupOpen);
   };
 
@@ -152,7 +155,7 @@ export const ChatForm = ({
         {isPopupOpen && (
           <div className="absolute top-0 left-0 transform -translate-x-full -translate-y-full mt-2 w-64 max-h-60 bg-[#1e2128] border border-gray-200 shadow-lg rounded-md z-50 overflow-auto">
             {error ? (
-              <div>Error: {error}</div>
+              <div className="p-2 text-white">{error}</div>
             ) : (
               <div className="grid grid-cols-5 gap-1 p-1">
                 {Object.keys(emotes).map((key, index) => (
