@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { format } from "date-fns";
 import { stringToColor } from "@/lib/utils"; // Ensure stringToColor is imported correctly
 
-interface ReceivedChatMessage {
+interface CustomReceivedChatMessage {
   from: {
     id: string;
     name: string;
@@ -14,7 +14,7 @@ interface ReceivedChatMessage {
 }
 
 interface ChatMessageProps {
-  data: ReceivedChatMessage;
+  data: CustomReceivedChatMessage;
 }
 
 /**

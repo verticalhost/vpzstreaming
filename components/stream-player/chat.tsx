@@ -16,7 +16,7 @@ import { ChatList, ChatListSkeleton } from "./chat-list";
 import { ChatHeader, ChatHeaderSkeleton } from "./chat-header";
 import { ChatCommunity } from "./chat-community";
 
-interface ReceivedChatMessage {
+interface CustomReceivedChatMessage {
   from: {
     id: string;
     name: string;
@@ -63,7 +63,7 @@ export const Chat = ({
   }, [matches, onExpand]);
 
   const sortedMessages = useMemo(() => {
-    return [...messages].sort(
+    return [...messages as CustomReceivedChatMessage[]].sort(
       (a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
     );
   }, [messages]);
@@ -71,7 +71,7 @@ export const Chat = ({
   const onSubmit = (message: string, timestamp: string) => {
     if (!send) return;
 
-    const newMessage: ReceivedChatMessage = {
+    const newMessage: CustomReceivedChatMessage = {
       from: { id: 'viewerID', name: viewerName },
       message,
       timestamp,

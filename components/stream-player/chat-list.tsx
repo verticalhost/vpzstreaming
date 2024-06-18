@@ -1,15 +1,22 @@
 "use client";
 
-import { ReceivedChatMessage } from "@livekit/components-react";
-
 import { Skeleton } from "@/components/ui/skeleton";
 
 import { ChatMessage } from "./chat-message";
 
+interface CustomReceivedChatMessage {
+  from: {
+    id: string;
+    name: string;
+  };
+  message: string;
+  timestamp: string;
+}
+
 interface ChatListProps {
-  messages: ReceivedChatMessage[];
+  messages: CustomReceivedChatMessage[];
   isHidden: boolean;
-};
+}
 
 export const ChatList = ({ messages, isHidden }: ChatListProps) => {
   if (isHidden || !messages || messages.length === 0) {
