@@ -40,7 +40,7 @@ export const Chat = ({
   const connectionState = useConnectionState();
   const participant = useRemoteParticipant(hostIdentity);
 
-  const isOnline = participant && connectionState === ConnectionState.Connected
+  const isOnline = participant && connectionState === ConnectionState.Connected;
 
   const isHidden = !isChatEnabled || !isOnline;
 
@@ -54,7 +54,7 @@ export const Chat = ({
   }, [matches, onExpand]);
 
   const reversedMessages = useMemo(() => {
-    return messages.sort((a, b) => b.timestamp - a.timestamp);
+    return messages.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
   }, [messages]);
 
   const onSubmit = () => {
