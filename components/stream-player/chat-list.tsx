@@ -4,17 +4,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 import { ChatMessage } from "./chat-message";
 
-interface CustomReceivedChatMessage {
-  from: {
-    id: string;
-    name: string;
-  };
-  message: string;
-  timestamp: string;
-}
-
 interface ChatListProps {
-  messages: CustomReceivedChatMessage[];
+  messages: any[]; // Assuming messages are properly parsed objects
   isHidden: boolean;
 }
 
