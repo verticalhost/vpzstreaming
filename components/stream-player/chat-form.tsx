@@ -145,7 +145,7 @@ export const ChatForm = ({
           )}
         />
       </div>
-      <div className="ml-auto flex items-center gap-x-2">
+      <div className="ml-auto flex items-center gap-x-2 relative">
         <Button type="submit" variant="primary" size="sm" disabled={isDisabled}>
           Chat
         </Button>
@@ -153,11 +153,11 @@ export const ChatForm = ({
           Emoji
         </Button>
         {isPopupOpen && (
-          <div className="absolute mt-2 w-56 bg-white border border-gray-200 shadow-lg rounded-md z-50">
+          <div className="absolute top-0 left-0 transform -translate-x-full -translate-y-full mt-2 w-64 max-h-60 bg-white border border-gray-200 shadow-lg rounded-md z-50 overflow-auto">
             {error ? (
               <div>Error: {error}</div>
             ) : (
-              <div className="grid grid-cols-9 gap-1 p-1">
+              <div className="grid grid-cols-5 gap-1 p-1">
                 {Object.keys(emotes).map((key, index) => (
                   <Button
                     key={index}
