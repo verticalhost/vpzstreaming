@@ -19,7 +19,7 @@ export const ChatList = ({ messages, isHidden }: ChatListProps) => {
           {isHidden ? "Chat is disabled" : "Welcome to the chat!"}
         </p>
       </div>
-    )
+    );
   }
 
   return (

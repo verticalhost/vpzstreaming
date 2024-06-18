@@ -3,10 +3,10 @@
 import { useEffect, useMemo, useState } from "react";
 import { ConnectionState } from "livekit-client";
 import { useMediaQuery } from "usehooks-ts";
-import { 
+import {
   useChat,
-  useConnectionState, 
-  useRemoteParticipant
+  useConnectionState,
+  useRemoteParticipant,
 } from "@livekit/components-react";
 
 import { ChatVariant, useChatSidebar } from "@/store/use-chat-sidebar";
@@ -24,7 +24,7 @@ interface ChatProps {
   isChatEnabled: boolean;
   isChatDelayed: boolean;
   isChatFollowersOnly: boolean;
-};
+}
 
 export const Chat = ({
   hostName,
@@ -33,9 +33,9 @@ export const Chat = ({
   isFollowing,
   isChatEnabled,
   isChatDelayed,
-  isChatFollowersOnly
+  isChatFollowersOnly,
 }: ChatProps) => {
-  const matches = useMediaQuery('(max-width: 1024px)');
+  const matches = useMediaQuery("(max-width: 1024px)");
   const { variant, onExpand } = useChatSidebar((state) => state);
   const connectionState = useConnectionState();
   const participant = useRemoteParticipant(hostIdentity);
@@ -54,7 +54,9 @@ export const Chat = ({
   }, [matches, onExpand]);
 
   const sortedMessages = useMemo(() => {
-    return [...messages].sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
+    return [...messages].sort(
+      (a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+    );
   }, [messages]);
 
   const onSubmit = () => {
@@ -73,10 +75,7 @@ export const Chat = ({
       <ChatHeader />
       {variant === ChatVariant.CHAT && (
         <>
-          <ChatList
-            messages={sortedMessages}
-            isHidden={isHidden}
-          />
+          <ChatList messages={sortedMessages} isHidden={isHidden} />
           <ChatForm
             onSubmit={onSubmit}
             value={value}
@@ -89,11 +88,7 @@ export const Chat = ({
         </>
       )}
       {variant === ChatVariant.COMMUNITY && (
-        <ChatCommunity
-          viewerName={viewerName}
-          hostName={hostName}
-          isHidden={isHidden}
-        />
+        <ChatCommunity viewerName={viewerName} hostName={hostName} isHidden={isHidden} />
       )}
     </div>
   );
