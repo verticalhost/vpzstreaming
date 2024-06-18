@@ -22,12 +22,10 @@ export const ChatList = ({ messages, isHidden }: ChatListProps) => {
     );
   }
 
-  // Sort messages by timestamp
-  const sortedMessages = messages.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
-
+  // Messages are already sorted by timestamp before being passed to this component
   return (
     <div className="flex flex-1 flex-col-reverse overflow-y-auto p-3 h-full">
-      {sortedMessages.map((message, index) => (
+      {messages.map((message, index) => (
         <ChatMessage key={index} data={message} />
       ))}
     </div>
