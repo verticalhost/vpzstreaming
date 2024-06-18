@@ -4,7 +4,7 @@ import { useState } from "react";
 import Image from "next/image"; // Import Image from next/image
 import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components.ui/button";
+import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ChatInfo } from "./chat-info";
 
