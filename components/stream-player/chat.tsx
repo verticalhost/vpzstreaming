@@ -63,7 +63,14 @@ export const Chat = ({
   }, [matches, onExpand]);
 
   const sortedMessages = useMemo(() => {
-    return [...messages].sort(
+    return [...messages].map((msgStr) => {
+      try {
+        return JSON.parse(msgStr);
+      } catch (e) {
+        console.error("Failed to parse message:", msgStr, e);
+        return null;
+      }
+    }).filter((msg) => msg !== null).sort(
       (a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
     );
   }, [messages]);
@@ -77,9 +84,8 @@ export const Chat = ({
       timestamp,
     };
 
-    // Merging message and timestamp into one object, send via the send function.
-    // Assuming send function needs a string and can handle timestamps separately.
-    send(JSON.stringify(newMessage)); // use stringify to pass as a string.
+    // Converting message object to a JSON string
+    send(JSON.stringify(newMessage));
   };
 
   const onChange = (value: string) => {
