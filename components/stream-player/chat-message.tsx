@@ -1,8 +1,10 @@
+"chat-message.tsx"
+
 "use client";
 
 import { useEffect, useState } from "react";
 import { format } from "date-fns";
-import { stringToColor } from "@/lib/utils";  // Ensure stringToColor is imported correctly
+import { stringToColor } from "@/lib/utils"; // Ensure stringToColor is imported correctly
 
 interface ChatMessageProps {
   data: any; // Assuming any here for flexibility
