@@ -53,9 +53,9 @@ export const Chat = ({
     }
   }, [matches, onExpand]);
 
-  const reversedMessages = useMemo(() => {
+  const sortedMessages = useMemo(() => {
     // Ensure the timestamp comparison is using Date objects
-    return [...messages].sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+    return [...messages].sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
   }, [messages]);
 
   const onSubmit = () => {
@@ -70,12 +70,12 @@ export const Chat = ({
   };
 
   return (
-    <div className="flex flex-col bg-background border-l border-b pt-0 h-[calc(100vh-80px)]">
+    <div className="flex flex-col bg-background border-l border-b pt-0 h-[calc(100vh-80px)] overflow-y-auto">
       <ChatHeader />
       {variant === ChatVariant.CHAT && (
         <>
           <ChatList
-            messages={reversedMessages}
+            messages={sortedMessages}
             isHidden={isHidden}
           />
           <ChatForm
