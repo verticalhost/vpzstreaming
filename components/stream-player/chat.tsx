@@ -63,14 +63,7 @@ export const Chat = ({
   }, [matches, onExpand]);
 
   const sortedMessages = useMemo(() => {
-    return [...messages].map((msgStr) => {
-      try {
-        return JSON.parse(msgStr);
-      } catch (e) {
-        console.error("Failed to parse message:", msgStr, e);
-        return null;
-      }
-    }).filter((msg) => msg !== null).sort(
+    return [...messages].sort(
       (a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
     );
   }, [messages]);
@@ -78,14 +71,14 @@ export const Chat = ({
   const onSubmit = (message: string, timestamp: string) => {
     if (!send) return;
 
-    const newMessage = {
+    const newMessage: ReceivedChatMessage = {
       from: { id: 'viewerID', name: viewerName },
       message,
       timestamp,
     };
 
-    // Converting message object to a JSON string
-    send(JSON.stringify(newMessage));
+    // Assuming send function accepts the structured message.
+    send(newMessage as unknown as string); // Typecast to string if send expects a string.
   };
 
   const onChange = (value: string) => {
