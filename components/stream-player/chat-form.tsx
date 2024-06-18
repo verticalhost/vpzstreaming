@@ -4,12 +4,12 @@ import { useState } from "react";
 import Image from "next/image"; // Import Image from next/image
 import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components.ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ChatInfo } from "./chat-info";
 
 interface ChatFormProps {
-  onSubmit: () => void;
+  onSubmit: (message: string, timestamp: string) => void;
   value: string;
   onChange: (value: string) => void;
   isHidden: boolean;
@@ -77,6 +77,20 @@ const fetch7tvEmotes = async () => {
   }
 };
 
+const fetchServerTime = async () => {
+  try {
+    const response = await fetch('https://worldtimeapi.org/api/timezone/Etc/UTC');
+    if (!response.ok) {
+      throw new Error('Failed to fetch time from worldtimeapi.org');
+    }
+    const data = await response.json();
+    return data.utc_datetime;
+  } catch (error: any) {
+    console.error(error);
+    return null;
+  }
+};
+
 export const ChatForm = ({
   onSubmit,
   value,
@@ -94,20 +108,31 @@ export const ChatForm = ({
   const isFollowersOnlyAndNotFollowing = isFollowersOnly && !isFollowing;
   const isDisabled = isHidden || isDelayBlocked || isFollowersOnlyAndNotFollowing;
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     e.stopPropagation();
 
     if (!value || isDisabled) return;
 
+    const timestamp = await fetchServerTime();
+    if (!timestamp) {
+      console.error('Could not fetch server time');
+      return;
+    }
+
+    const sendMessage = () => {
+      onSubmit(value, timestamp);
+      setValue("");
+    };
+
     if (isDelayed && !isDelayBlocked) {
       setIsDelayBlocked(true);
       setTimeout(() => {
         setIsDelayBlocked(false);
-        onSubmit();
+        sendMessage();
       }, 3000);
     } else {
-      onSubmit();
+      sendMessage();
     }
   };
 
