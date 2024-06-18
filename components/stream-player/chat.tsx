@@ -94,6 +94,7 @@ export const Chat = ({
             onSubmit={onSubmit}
             value={value}
             onChange={onChange}
+            setValue={setValue} // Pass the setValue function here
             isHidden={isHidden}
             isFollowersOnly={isChatFollowersOnly}
             isDelayed={isChatDelayed}
