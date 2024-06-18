@@ -51,10 +51,10 @@ export async function POST(req: Request) {
 
       // Envoyer une notification à Discord via le webhook
       const discordMessage = {
-        content: `🚨 Un nouveau stream vient de commencer ! 🚨\nRegardez [${username}](${profileUrl}) en direct maintenant!`,
+        content: `🚨 A new stream has started! 🚨\nWatch [${username}](${profileUrl}) live now!`,
         embeds: [
           {
-            title: `Nouveau stream par ${username}`,
+            title: `New stream by ${username}`,
             url: profileUrl,
             thumbnail: {
               url: imageUrl
