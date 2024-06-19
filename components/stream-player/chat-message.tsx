@@ -1,14 +1,13 @@
-// chat-message.tsx
+"chat-message.tsx"
 
 "use client";
 
 import { useEffect, useState } from "react";
 import { format } from "date-fns";
-// Removed unnecessary import
 import { stringToColor } from "@/lib/utils"; // Ensure stringToColor is imported correctly
 
 interface ChatMessageProps {
-  message: string; // Only the message string is needed
+  data: any; // Assuming any here for flexibility
 }
 
 /**
@@ -94,19 +93,29 @@ const parseEmotes = (message: string, emotes: { [key: string]: string }) => {
   });
 };
 
-export const ChatMessage = ({ message }: ChatMessageProps) => {
+export const ChatMessage = ({ data }: ChatMessageProps) => {
+  const color = stringToColor(data.from?.name || "");
   const { emotes, error } = use7tvEmotes();
 
   return (
     <div className="flex flex-col gap-2 p-2 rounded-md hover:bg-white/5">
+      <p className="text-sm text-white/40">
+        {format(new Date(data.timestamp), "HH:mm:ss")}
+      </p>
       {error && (
         <div>
           <div>Error: {error}</div>
         </div>
       )}
       <div className="flex flex-wrap items-baseline gap-1 grow">
+        <p className="text-sm font-semibold whitespace-nowrap">
+          <span className="truncate" style={{ color: color }}>
+            {data.from?.name}:
+          </span>
+        </p>
         <p className="text-sm break-all">
-          {parseEmotes(message, emotes)}
+          {const fuckingshit = JSON.parse(data.message)}
+          {parseEmotes(fuckingshit, emotes)}
         </p>
       </div>
     </div>
