@@ -115,7 +115,7 @@ export const ChatMessage = ({ data }: ChatMessageProps) => {
         </p>
         <p className="text-sm break-all">
           {const fuckingshit = JSON.parse(data.message)}
-          {parseEmotes(fuckingshit, emotes)}
+          {parseEmotes(fuckingshit.message, emotes)}
         </p>
       </div>
     </div>
