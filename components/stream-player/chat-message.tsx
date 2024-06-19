@@ -84,6 +84,7 @@ const use7tvEmotes = () => {
 };
 
 const parseEmotes = (message: string, emotes: { [key: string]: string }) => {
+  
   const words = message.split(" ");
   return words.map((word, index) => {
     if (emotes[word]) {
@@ -94,6 +95,7 @@ const parseEmotes = (message: string, emotes: { [key: string]: string }) => {
 };
 
 export const ChatMessage = ({ data }: ChatMessageProps) => {
+  const fuckingshit = JSON.parse(data.message)
   const color = stringToColor(data.from?.name || "");
   const { emotes, error } = use7tvEmotes();
 
@@ -114,7 +116,7 @@ export const ChatMessage = ({ data }: ChatMessageProps) => {
           </span>
         </p>
         <p className="text-sm break-all">
-          {const fuckingshit = JSON.parse(data.message)}
+          
           {parseEmotes(fuckingshit.message, emotes)}
         </p>
       </div>
