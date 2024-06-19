@@ -7,6 +7,7 @@ import {
   KeyRound,
   MessageSquare,
   Users,
+  
 } from "lucide-react";
 
 import { NavItem, NavItemSkeleton } from "./nav-item";
@@ -34,6 +35,11 @@ export const Navigation = () => {
     {
       label: "Community",
       href: `/u/${user?.username}/community`,
+      icon: Users,
+    },
+    {
+      label: "Discord",
+      href: `https://discord.gg/aFVWFyBauZ`,
       icon: Users,
     },
   ];
