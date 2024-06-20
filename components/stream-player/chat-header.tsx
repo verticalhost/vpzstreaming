@@ -1,13 +1,11 @@
 "use client";
 
 import { Skeleton } from "@/components/ui/skeleton";
+
 import { ChatToggle } from "./chat-toggle";
 import { VariantToggle } from "./variant-toggle";
-import { useChatPopup } from "@/hooks/use-chat-popup";
 
 export const ChatHeader = () => {
-  const { openPopup } = useChatPopup(); // Utilisez le hook
-
   return (
     <div className="relative p-3 border-b">
       <div className="absolute left-2 top-2 hidden lg:block">
@@ -16,11 +14,8 @@ export const ChatHeader = () => {
       <p className="font-semibold text-priamry text-center">
         Stream Chat
       </p>
-      <div className="absolute right-2 top-2 flex items-center gap-2">
+      <div className="absolute right-2 top-2">
         <VariantToggle />
-        <button onClick={openPopup} className="text-white p-1.5 hover:bg-white/10 rounded-lg">
-          Open Chat in Popup
-        </button>
       </div>
     </div>
   );
