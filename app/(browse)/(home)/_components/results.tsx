@@ -24,6 +24,14 @@ export const Results = async () => {
           />
         ))}
       </div>
+      {/* Add Discord Button Below */}
+      <div className="mt-4">
+        <a href="https://discord.gg/W46Xg53U4Y" target="_blank" rel="noopener noreferrer">
+          <button className="bg-blue-500 text-white px-4 py-2 rounded-md">
+            Join our Discord
+          </button>
+        </a>
+      </div>
     </div>
   )
 }
