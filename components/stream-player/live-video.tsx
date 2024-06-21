@@ -1,89 +1,79 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
-import { RemoteParticipant } from "livekit-client";
-import { FullscreenControl } from "./fullscreen-control";
+import { useRef, useState, useEffect } from "react";
+import { Participant, Track } from "livekit-client";
+import { useTracks } from "@livekit/components-react";
+import { useEventListener } from "usehooks-ts";
+
 import { VolumeControl } from "./volume-control";
+import { FullscreenControl } from "./fullscreen-control";
 
 interface LiveVideoProps {
-  participant: RemoteParticipant;
-}
+  participant: Participant;
+};
 
-export const LiveVideo = ({ participant }: LiveVideoProps) => {
+export const LiveVideo = ({
+  participant,
+}: LiveVideoProps) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
+
   const [isFullscreen, setIsFullscreen] = useState(false);
-  const [volume, setVolume] = useState(100);
-  const [currentTime, setCurrentTime] = useState(0);
-
-  useEffect(() => {
-    const video = videoRef.current;
-    if (video && participant.videoTracks) {
-      const track = participant.videoTracks.values().next().value;
-      if (track) {
-        track.attach(video);
-        return () => {
-          track.detach(video);
-        };
-      }
-    }
-  }, [participant.videoTracks]);
-
-  const toggleFullscreen = () => {
-    const wrapper = wrapperRef.current;
-    if (wrapper) {
-      if (isFullscreen) {
-        if (document.exitFullscreen) {
-          document.exitFullscreen();
-        }
-      } else {
-        if (wrapper.requestFullscreen) {
-          wrapper.requestFullscreen();
-        }
-      }
-      setIsFullscreen(!isFullscreen);
-    }
-  };
+  const [volume, setVolume] = useState(0);
 
   const onVolumeChange = (value: number) => {
-    const video = videoRef.current;
-    if (video && participant.audioTracks) {
-      participant.setVolume(value / 100);
-      setVolume(value);
+    setVolume(+value);
+    if (videoRef?.current) {
+      videoRef.current.muted = value === 0;
+      videoRef.current.volume = +value * 0.01;
     }
   };
 
   const toggleMute = () => {
-    const video = videoRef.current;
-    if (video && participant.audioTracks) {
-      const audioTrack = participant.audioTracks.values().next().value;
-      if (audioTrack) {
-        audioTrack.track.isEnabled = !audioTrack.track.isEnabled;
-        setVolume(audioTrack.track.isEnabled ? 100 : 0);
-      }
+    const isMuted = volume === 0;
+
+    setVolume(isMuted ? 50 : 0);
+
+    if (videoRef?.current) {
+      videoRef.current.muted = !isMuted;
+      videoRef.current.volume = isMuted ? 0.5 : 0;
+    }
+  };
+  
+  useEffect(() => {
+    onVolumeChange(0);
+  }, []);
+
+  const toggleFullscreen = () => {
+    if (isFullscreen) {
+      document.exitFullscreen()
+    } else if (wrapperRef?.current) {
+      wrapperRef.current.requestFullscreen()
     }
   };
 
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      if (videoRef.current && participant.videoTracks) {
-        const videoTrack = participant.videoTracks.values().next().value;
-        if (videoTrack) {
-          setCurrentTime(videoTrack.track.currentTime);
-        }
-      }
-    }, 1000);
+  const handleFullscreenChange = () => {
+    const isCurrentlyFullscreen = document.fullscreenElement !== null;
+    setIsFullscreen(isCurrentlyFullscreen);
+  }
 
-    return () => clearInterval(intervalId);
-  }, [participant.videoTracks]);
+  useEventListener("fullscreenchange", handleFullscreenChange, wrapperRef);
+
+  useTracks([Track.Source.Camera, Track.Source.Microphone])
+    .filter((track) => track.participant.identity === participant.identity)
+    .forEach((track) => {
+      if (videoRef.current) {
+        track.publication.track?.attach(videoRef.current)
+      }
+    });
 
   return (
-    <div ref={wrapperRef} className="relative h-full flex">
+    <div 
+      ref={wrapperRef}
+      className="relative h-full flex"
+    >
       <video ref={videoRef} width="100%" />
       <div className="absolute top-0 h-full w-full opacity-0 hover:opacity-100 hover:transition-all">
-        <div className="absolute top-0 left-0 p-2 bg-black/50 text-white">
-          {formatTime(currentTime)}
-        </div>
         <div className="absolute bottom-0 flex h-14 w-full items-center justify-between bg-gradient-to-r from-neutral-900 px-4">
           <VolumeControl
             onChange={onVolumeChange}
@@ -98,14 +88,4 @@ export const LiveVideo = ({ participant }: LiveVideoProps) => {
       </div>
     </div>
   );
-};
-
-const formatTime = (time: number) => {
-  const hours = Math.floor(time / 3600);
-  const minutes = Math.floor((time % 3600) / 60);
-  const seconds = Math.floor(time % 60);
-
-  return `${hours.toString().padStart(2, "0")}:${minutes
-    .toString()
-    .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
 };
