@@ -2,6 +2,7 @@
 
 import { useUser } from "@clerk/nextjs";
 import { usePathname } from "next/navigation";
+import { Lightbulb } from "lucide-react";
 import { 
   Fullscreen,
   KeyRound,
@@ -38,9 +39,9 @@ export const Navigation = () => {
       icon: Users,
     },
     {
-      label: "Discord",
-      href: `https://discord.gg/aFVWFyBauZ`,
-      icon: Users,
+      label: "Suggestions",
+      href: `https://verticalpixelzone.canny.io/`,
+      icon: Lightbulb,
     },
   ];
 
