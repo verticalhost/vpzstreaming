@@ -1,16 +1,12 @@
 "use client";
 
 import { UserIcon } from "lucide-react";
-import { 
-  useParticipants, 
-  useRemoteParticipant
-} from "@livekit/components-react";
-
+import { useParticipants, useRemoteParticipant } from "@livekit/components-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { VerifiedMark } from "@/components/verified-mark";
 import { UserAvatar, UserAvatarSkeleton } from "@/components/user-avatar";
-
 import { Actions, ActionsSkeleton } from "./actions";
+import { Button } from "@/components/ui/button"; // Adjust the import path if necessary
 
 interface HeaderProps {
   imageUrl: string;
@@ -19,7 +15,7 @@ interface HeaderProps {
   viewerIdentity: string;
   isFollowing: boolean;
   name: string;
-};
+}
 
 export const Header = ({
   imageUrl,
@@ -59,7 +55,7 @@ export const Header = ({
             {name}
           </p>
           {isLive ? (
-            <div className="font-semibold flex gap-x-1 items-center text-xs text-rose-500"> 
+            <div className="font-semibold flex gap-x-1 items-center text-xs text-rose-500">
               <UserIcon className="h-4 w-4" />
               <p>
                 {participantCount} {participantCount === 1 ? "viewer" : "viewers"}
@@ -72,11 +68,19 @@ export const Header = ({
           )}
         </div>
       </div>
-      <Actions
-        isFollowing={isFollowing}
-        hostIdentity={hostIdentity}
-        isHost={isHost}
-      />
+      <div className="flex items-center gap-x-2">
+        <Actions
+          isFollowing={isFollowing}
+          hostIdentity={hostIdentity}
+          isHost={isHost}
+        />
+        {/* Add Discord Button */}
+        <a href="https://ko-fi.com/verticalpixelzone" target="_blank" rel="noopener noreferrer">
+          <Button variant="secondary">
+            Donate to VPZ
+          </Button>
+        </a>
+      </div>
     </div>
   );
 };
