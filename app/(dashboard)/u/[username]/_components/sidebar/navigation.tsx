@@ -2,12 +2,12 @@
 
 import { useUser } from "@clerk/nextjs";
 import { usePathname } from "next/navigation";
-import { Lightbulb } from "lucide-react";
 import { 
   Fullscreen,
   KeyRound,
   MessageSquare,
   Users,
+  Lightbulb
   
 } from "lucide-react";
 
