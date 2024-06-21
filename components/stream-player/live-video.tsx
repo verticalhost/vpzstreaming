@@ -1,14 +1,15 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
+import { RemoteParticipant } from "livekit-client";
 import { FullscreenControl } from "./fullscreen-control";
 import { VolumeControl } from "./volume-control";
 
 interface LiveVideoProps {
-  streamUrl: string;
+  participant: RemoteParticipant;
 }
 
-export const LiveVideo = ({ streamUrl }: LiveVideoProps) => {
+export const LiveVideo = ({ participant }: LiveVideoProps) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -17,11 +18,16 @@ export const LiveVideo = ({ streamUrl }: LiveVideoProps) => {
 
   useEffect(() => {
     const video = videoRef.current;
-    if (video) {
-      video.src = streamUrl;
-      video.play();
+    if (video && participant.videoTracks) {
+      const track = participant.videoTracks.values().next().value;
+      if (track) {
+        track.attach(video);
+        return () => {
+          track.detach(video);
+        };
+      }
     }
-  }, [streamUrl]);
+  }, [participant.videoTracks]);
 
   const toggleFullscreen = () => {
     const wrapper = wrapperRef.current;
@@ -41,29 +47,35 @@ export const LiveVideo = ({ streamUrl }: LiveVideoProps) => {
 
   const onVolumeChange = (value: number) => {
     const video = videoRef.current;
-    if (video) {
-      video.volume = value / 100;
+    if (video && participant.audioTracks) {
+      participant.setVolume(value / 100);
       setVolume(value);
     }
   };
 
   const toggleMute = () => {
     const video = videoRef.current;
-    if (video) {
-      video.muted = !video.muted;
-      setVolume(video.muted ? 0 : 100);
+    if (video && participant.audioTracks) {
+      const audioTrack = participant.audioTracks.values().next().value;
+      if (audioTrack) {
+        audioTrack.track.isEnabled = !audioTrack.track.isEnabled;
+        setVolume(audioTrack.track.isEnabled ? 100 : 0);
+      }
     }
   };
 
   useEffect(() => {
     const intervalId = setInterval(() => {
-      if (videoRef.current) {
-        setCurrentTime(videoRef.current.currentTime);
+      if (videoRef.current && participant.videoTracks) {
+        const videoTrack = participant.videoTracks.values().next().value;
+        if (videoTrack) {
+          setCurrentTime(videoTrack.track.currentTime);
+        }
       }
     }, 1000);
 
     return () => clearInterval(intervalId);
-  }, []);
+  }, [participant.videoTracks]);
 
   return (
     <div ref={wrapperRef} className="relative h-full flex">
