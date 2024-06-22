@@ -1,4 +1,4 @@
-// components/stream-player/chat.tsx
+"chat.tsx"
 
 "use client";
 
@@ -19,7 +19,6 @@ import { ChatHeader, ChatHeaderSkeleton } from "./chat-header";
 import { ChatCommunity } from "./chat-community";
 
 interface ChatProps {
-  streamerName: string;
   hostName: string;
   hostIdentity: string;
   viewerName: string;
@@ -30,7 +29,6 @@ interface ChatProps {
 }
 
 export const Chat = ({
-  streamerName,
   hostName,
   hostIdentity,
   viewerName,
@@ -41,9 +39,8 @@ export const Chat = ({
 }: ChatProps) => {
   const matches = useMediaQuery('(max-width: 1024px)');
   const { variant, onExpand } = useChatSidebar((state) => state);
-
   const connectionState = useConnectionState();
-  const participant = useRemoteParticipant(streamerName);
+  const participant = useRemoteParticipant(hostIdentity);
 
   const isOnline = participant && connectionState === ConnectionState.Connected;
 
@@ -68,7 +65,7 @@ export const Chat = ({
     if (!send) return;
 
     const newMessage = {
-      from: { id: "viewerID", name: streamerName },
+      from: { id: "viewerID", name: viewerName },
       message,
       timestamp
     };
@@ -103,8 +100,8 @@ export const Chat = ({
       )}
       {variant === ChatVariant.COMMUNITY && (
         <ChatCommunity
-          viewerName={streamerName}
-          hostName={streamerName}
+          viewerName={viewerName}
+          hostName={hostName}
           isHidden={isHidden}
         />
       )}
@@ -116,6 +113,8 @@ export const ChatSkeleton = () => {
   return (
     <div className="flex flex-col border-l border-b pt-0 h-[calc(100vh-80px)] border-2">
       <ChatHeaderSkeleton />
+      <ChatListSkeleton />
+      <ChatFormSkeleton />
     </div>
   );
 };
