@@ -4,7 +4,7 @@ import { ArrowLeftFromLine, ArrowRightFromLine } from "lucide-react";
 import { Hint } from "@/components/hint";
 import { Button } from "@/components/ui/button";
 import { useChatSidebar } from "@/store/use-chat-sidebar";
-import ReactDOM from 'react-dom';
+import ReactDOM from 'react-dom/client'; // Update this import
 import ChatPopupWindow from './ChatPopupWindow';
 
 export const ChatToggle = () => {
@@ -37,7 +37,8 @@ export const ChatToggle = () => {
       chatWindow.onload = () => {
         const rootElement = chatWindow.document.getElementById('chat-popup-root');
         if (rootElement) {
-          ReactDOM.render(<ChatPopupWindow />, rootElement);
+          const root = ReactDOM.createRoot(rootElement); // Use createRoot
+          root.render(<ChatPopupWindow />);
         }
       };
     }
