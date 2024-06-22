@@ -32,7 +32,7 @@ export const ChatToggle = () => {
     );
 
     if (chatWindow) {
-      chatWindow.document.write('<div id="chat-popup-root"></div>');
+      chatWindow.document.write('<!DOCTYPE html><html><head><title>Chat Popup</title></head><body><div id="chat-popup-root"></div></body></html>');
       chatWindow.document.close();
       chatWindow.onload = () => {
         const rootElement = chatWindow.document.getElementById('chat-popup-root');
