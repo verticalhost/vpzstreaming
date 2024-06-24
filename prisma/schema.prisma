@@ -26,7 +26,7 @@ model User {
 
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
-  ChatMessage ChatMessage[]
+  chatMessages ChatMessage[] // Updated field name to follow camelCase convention
 }
 
 model Stream {
@@ -48,7 +48,7 @@ model Stream {
 
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
-  ChatMessage ChatMessage[]
+  chatMessages ChatMessage[] // Updated field name to follow camelCase convention
 
   @@index([userId])
   @@index([ingressId])
@@ -82,4 +82,15 @@ model Block {
   @@unique([blockerId, blockedId])
   @@index([blockerId])
   @@index([blockedId])
+}
+
+model ChatMessage {
+  id        String   @id @default(uuid())
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  streamId  String
+  stream    Stream   @relation(fields: [streamId], references: [id])
 }
