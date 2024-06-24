@@ -77,7 +77,7 @@ export const Header = ({
         {/* Add Discord Button */}
         <a href="https://ko-fi.com/verticalpixelzone" target="_blank" rel="noopener noreferrer">
           <Button variant="secondary">
-            Donate to VPZ
+            Support us on Ko-fi
           </Button>
         </a>
       </div>
